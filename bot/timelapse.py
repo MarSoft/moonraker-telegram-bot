@@ -3,7 +3,8 @@ import logging
 import time
 
 from apscheduler.schedulers.base import BaseScheduler  # type: ignore
-from telegram import Bot, ChatAction, Message
+from telegram import Bot, Message
+from telegram.constants import ChatAction
 from telegram.error import BadRequest
 
 from camera import Camera
