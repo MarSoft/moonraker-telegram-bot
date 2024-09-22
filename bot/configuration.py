@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 from typing import Any, Callable, List, Optional, Union
 
-from telegram.utils.helpers import escape
+from telegram.helpers import escape
 
 
 class ConfigHelper:

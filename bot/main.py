@@ -22,7 +22,6 @@ import emoji
 import telegram
 from telegram import (
     BotCommand,
-    ChatAction,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     InputMediaAudio,
@@ -34,10 +33,10 @@ from telegram import (
     ReplyKeyboardMarkup,
     Update,
 )
-from telegram.constants import PARSEMODE_HTML
+from telegram.constants import ParseMode, ChatAction
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler, Filters, MessageHandler, Updater
-from telegram.utils.helpers import escape
+from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler, MessageHandler, Updater
+from telegram.helpers import escape
 from websocket_helper import WebSocketHelper
 
 from camera import Camera
@@ -133,7 +132,7 @@ def unknown_chat(update: Update, _: CallbackContext) -> None:
     mess = f"Unauthorized access detected with chat_id: {update.effective_chat.id}.\n<tg-spoiler>This incident will be reported.</tg-spoiler>"
     update.effective_message.reply_text(
         mess,
-        parse_mode=PARSEMODE_HTML,
+        parse_mode=ParseMode.HTML,
         quote=True,
     )
     logger.error("Unauthorized access detected from `%s` with chat_id `%s`. Message: %s", update.effective_chat.username, update.effective_chat.id, update.effective_message.to_json())
@@ -156,7 +155,7 @@ def status(update: Update, _: CallbackContext) -> None:
                 update.effective_message.reply_photo(
                     photo=bio,
                     caption=mess,
-                    parse_mode=PARSEMODE_HTML,
+                    parse_mode=ParseMode.HTML,
                     disable_notification=notifier.silent_commands,
                 )
                 bio.close()
@@ -164,7 +163,7 @@ def status(update: Update, _: CallbackContext) -> None:
             update.effective_message.bot.send_chat_action(chat_id=configWrap.secrets.chat_id, action=ChatAction.TYPING)
             update.effective_message.reply_text(
                 mess,
-                parse_mode=PARSEMODE_HTML,
+                parse_mode=ParseMode.HTML,
                 disable_notification=notifier.silent_commands,
                 quote=True,
             )
@@ -380,7 +379,7 @@ def light_toggle(update: Update, _: CallbackContext) -> None:
         mess = f"Device `{light_power_device.name}` toggled " + ("on" if light_power_device.toggle_device() else "off")
         update.effective_message.reply_text(
             mess,
-            parse_mode=PARSEMODE_HTML,
+            parse_mode=ParseMode.HTML,
             disable_notification=notifier.silent_commands,
             quote=True,
         )
@@ -559,7 +558,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
         psu_power_device.switch_device(False)
         update.effective_message.reply_to_message.reply_text(
             f"Device `{psu_power_device.name}` toggled off",
-            parse_mode=PARSEMODE_HTML,
+            parse_mode=ParseMode.HTML,
             quote=True,
         )
         query.delete_message()
@@ -567,7 +566,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
         psu_power_device.switch_device(True)
         update.effective_message.reply_to_message.reply_text(
             f"Device `{psu_power_device.name}` toggled on",
-            parse_mode=PARSEMODE_HTML,
+            parse_mode=ParseMode.HTML,
             quote=True,
         )
         query.delete_message()
@@ -943,7 +942,7 @@ def help_command(update: Update, _: CallbackContext) -> None:
     )
     update.effective_message.reply_text(
         text=mess,
-        parse_mode=PARSEMODE_HTML,
+        parse_mode=ParseMode.HTML,
         quote=True,
     )
 
@@ -986,7 +985,7 @@ def greeting_message(bot: telegram.Bot) -> None:
     bot.send_message(
         configWrap.secrets.chat_id,
         text=mess,
-        parse_mode=PARSEMODE_HTML,
+        parse_mode=ParseMode.HTML,
         reply_markup=reply_markup,
         disable_notification=notifier.silent_status,
     )

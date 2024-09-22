@@ -6,10 +6,10 @@ import re
 from typing import Dict, List, Optional, Union
 
 from apscheduler.schedulers.base import BaseScheduler  # type: ignore
-from telegram import Bot, ChatAction, InlineKeyboardButton, InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo, Message
-from telegram.constants import PARSEMODE_MARKDOWN_V2
+from telegram import Bot, InlineKeyboardButton, InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo, Message
+from telegram.constants import ParseMode, ChatAction
 from telegram.error import BadRequest
-from telegram.utils.helpers import escape_markdown
+from telegram.helpers import escape_markdown
 
 from camera import Camera
 from configuration import ConfigWrapper
@@ -134,9 +134,9 @@ class Notifier:
                         self._bzz_mess_id = 0
 
                 if self._status_message.caption:
-                    self._status_message.edit_caption(caption=message, parse_mode=PARSEMODE_MARKDOWN_V2)
+                    self._status_message.edit_caption(caption=message, parse_mode=ParseMode.MARKDOWN_V2)
                 else:
-                    self._status_message.edit_text(text=message, parse_mode=PARSEMODE_MARKDOWN_V2)
+                    self._status_message.edit_text(text=message, parse_mode=ParseMode.MARKDOWN_V2)
 
                 if self._progress_update_message:
                     mes = self._bot.send_message(self._chat_id, text="Status has been updated\nThis message will be deleted", disable_notification=silent)
@@ -145,7 +145,7 @@ class Notifier:
                 sent_message = self._bot.send_message(
                     self._chat_id,
                     text=message,
-                    parse_mode=PARSEMODE_MARKDOWN_V2,
+                    parse_mode=ParseMode.MARKDOWN_V2,
                     disable_notification=silent,
                 )
                 if not self._status_message and not manual:
@@ -156,14 +156,14 @@ class Notifier:
             if group in self._groups_status_mesages and not manual:
                 mess = self._groups_status_mesages[group]
                 if mess.caption:
-                    mess.edit_caption(caption=message, parse_mode=PARSEMODE_MARKDOWN_V2)
+                    mess.edit_caption(caption=message, parse_mode=ParseMode.MARKDOWN_V2)
                 else:
-                    mess.edit_text(text=message, parse_mode=PARSEMODE_MARKDOWN_V2)
+                    mess.edit_text(text=message, parse_mode=ParseMode.MARKDOWN_V2)
             else:
                 sent_message = self._bot.send_message(
                     group,
                     text=message,
-                    parse_mode=PARSEMODE_MARKDOWN_V2,
+                    parse_mode=ParseMode.MARKDOWN_V2,
                     disable_notification=silent,
                 )
                 if group in self._groups_status_mesages or manual:
@@ -187,7 +187,7 @@ class Notifier:
 
                         # Fixme: check if media in message!
                         self._status_message.edit_media(media=InputMediaPhoto(photo))
-                        self._status_message.edit_caption(caption=message, parse_mode=PARSEMODE_MARKDOWN_V2)
+                        self._status_message.edit_caption(caption=message, parse_mode=ParseMode.MARKDOWN_V2)
 
                         if self._progress_update_message:
                             mes = self._bot.send_message(self._chat_id, text="Status has been updated\nThis message will be deleted", disable_notification=silent)
@@ -198,7 +198,7 @@ class Notifier:
                             self._chat_id,
                             photo=photo,
                             caption=message,
-                            parse_mode=PARSEMODE_MARKDOWN_V2,
+                            parse_mode=ParseMode.MARKDOWN_V2,
                             disable_notification=silent,
                         )
                         if not self._status_message and not manual:
@@ -210,13 +210,13 @@ class Notifier:
                     if group in self._groups_status_mesages and not manual:
                         mess = self._groups_status_mesages[group]
                         mess.edit_media(media=InputMediaPhoto(photo))
-                        mess.edit_caption(caption=message, parse_mode=PARSEMODE_MARKDOWN_V2)
+                        mess.edit_caption(caption=message, parse_mode=ParseMode.MARKDOWN_V2)
                     else:
                         sent_message = self._bot.send_photo(
                             group,
                             photo=photo,
                             caption=message,
-                            parse_mode=PARSEMODE_MARKDOWN_V2,
+                            parse_mode=ParseMode.MARKDOWN_V2,
                             disable_notification=silent,
                         )
                         if group in self._groups_status_mesages or manual:
